@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mall.mapper.TextLinkMoodMapper">
+
+    <resultMap id="TextMood" type="mall.entity.TextLinkMood">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="text" jdbcType="VARCHAR" property="text" />
+        <result column="mood" jdbcType="VARCHAR" property="mood" />
+        <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    </resultMap>
+
+    <insert id="add">
+        insert into boring_textlinkmood (mood, text, createDate) values (#{mood}, #{text}, #{createDate})
+    </insert>
+
+</mapper>

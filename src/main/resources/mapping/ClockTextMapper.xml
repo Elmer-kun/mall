@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mall.mapper.ClockTextMapper">
+    <resultMap id="clockText" type="mall.entity.ClockText">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="userId" jdbcType="VARCHAR" property="userId" />
+        <result column="username" jdbcType="VARCHAR" property="userName" />
+        <result column="clockInfo" jdbcType="VARCHAR" property="clockInfo" />
+        <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    </resultMap>
+
+    <insert id="add">
+        insert into clockin_clocktext (userId, username, clockInfo, createDate) values (#{userId}, #{userName},  #{clockInfo}, #{createDate})
+    </insert>
+
+    <select id="findClock" resultMap="clockText">
+        select * from clockin_clocktext where userId = #{userId}
+    </select>
+</mapper>

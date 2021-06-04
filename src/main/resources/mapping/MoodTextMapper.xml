@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mall.mapper.MoodTextMapper">
+
+    <resultMap id="MoodText" type="mall.entity.MoodText">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="text" jdbcType="VARCHAR" property="text" />
+        <result column="name_id" jdbcType="INTEGER" property="name_id" />
+        <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    </resultMap>
+
+    <select id="findText" resultMap="MoodText">
+        select * from boring_moodtextmodel where name_id = (select id from boring_moodmodel where name= #{name}) limit 6
+    </select>
+</mapper>
