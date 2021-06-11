@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Boring</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+	<script src="../js/jquery-3.6.0.min.js"></script>
+	<script type="text/javascript">
+		function getMood() {
+			if($("#textInput").val()){
+			    $.ajax({
+			        url: "textSubmit",
+					type: "POST",
+					data: {'textInput': $("#textInput").val()},
+					success: function ok(data) {
+						$("#mood").append(data.mood);
+						for(let i = 0; i < data.text.length; i++){
+						    $("#textList").append("<li>" +data.text[i].text+ "</li>");
+						}
+                    }
+				});
+			}
+        }
+	</script>
+</head>
+<body>
+<div  style="height: 600px">
+<div style="padding-top:10%">
+		<div class="row">
+			<div class="col-lg-6 container">
+				<div class="input-group ">
+					<input type="text" class="form-control" id="textInput" name="textInput">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit" onclick="getMood()">
+							bored
+						</button>
+					</span>
+				</div><!-- /input-group -->
+			</div><!-- /.col-lg-6 -->
+		</div><!-- /.row -->
+    <div class="col-lg-6 container">
+		<p> 您今天心情： <span id="mood"></span></p>
+    </div>
+	<div class="col-lg-6 container">
+		<ul id="textList"></ul>
+	</div>
+</div>
+</div>
+
+<div style="width:300px;margin:0 auto; padding:20px 0;">
+	<img src="../img/beiAn.png">
+<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=13052302000201" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">冀公网安备 13052302000201号</p></a>
+<a target="_blank" href="https://beian.miit.gov.cn" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">@2021 boredno 冀ICP备18030797号-1</p></a>
+</div>
+</body>
+</html>

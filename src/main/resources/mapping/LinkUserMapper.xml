@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mall.mapper.LinkUserMapper">
+    <resultMap id="linkUser" type="mall.entity.LinkUser">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="userid" jdbcType="VARCHAR" property="userId" />
+        <result column="username" jdbcType="VARCHAR" property="userName" />
+        <result column="text" jdbcType="VARCHAR" property="text" />
+        <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    </resultMap>
+
+    <insert id="add">
+        insert into boring_textlinkuser (userid, username, text, createDate) values (#{userId}, #{userName}, #{text}, #{createDate})
+    </insert>
+
+    <select id="getUserHis" resultMap="linkUser">
+        select * from boring_textlinkuser where  userid=#{userId} limit 10
+    </select>
+
+    <select id="getHis" resultMap="linkUser">
+        select * from boring_textlinkuser order by rand() limit 5
+    </select>
+</mapper>

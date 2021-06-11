@@ -1,31 +1,51 @@
 package mall.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import mall.base.BaseUtil;
-import mall.entity.TextLinkMood;
-import mall.service.MoodModelService;
-import mall.service.MoodTextService;
-import mall.service.TextLinkMoodService;
+import mall.entity.*;
+import mall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @RestController
-@RequestMapping("/wx")
 public class WxController {
 
     @Autowired
-    MoodModelService modelService;
+    private MoodModelService modelService;
 
     @Autowired
-    MoodTextService moodTextService;
+    private MoodTextService moodTextService;
 
     @Autowired
-    TextLinkMoodService textLinkMoodService;
+    private TextLinkMoodService textLinkMoodService;
+
+    @Autowired
+    private LinkUserService linkUserService;
+
+    @Autowired
+    private LinkKidingService linkKidingService;
+
+    @Autowired
+    private ClockTextService clockTextService;
+
+    @Autowired
+    private UserClockService userClockService;
+
+    @RequestMapping("/textSubmit")
+    public Object textSubmit(){
+        JSONObject json = new JSONObject();
+        json.put("mood", textLinkMoodService.selectRand().getMood());
+        json.put("text", linkUserService.getHis());
+        return json;
+    }
 
     @RequestMapping("/getOpenid")
     public Object Hello(){
@@ -49,7 +69,9 @@ public class WxController {
 
     @RequestMapping("getSentence")
     public Object getSentence(){
-        return  moodTextService.findText("喜");
+        JSONObject json = new JSONObject();
+        json.put("sen", linkKidingService.getRand().getText());
+        return  json;
     }
 
     @RequestMapping("getmoodmodel")
@@ -81,7 +103,80 @@ public class WxController {
     @RequestMapping("posttext")
     public Object PostText(String userid, String name, String textinput){
         JSONObject json = new JSONObject();
-        json.put("text", "sucess");
+        LinkUser user = new LinkUser();
+        user.setUserId(userid);
+        user.setUserName(name);
+        user.setText(textinput);
+        user.setCreateDate(new Date());
+        linkUserService.add(user);
+        TextLinkMood mood = textLinkMoodService.selectRand();
+        json.put("text", linkUserService.getUserHis(userid));
+        json.put("mood", mood.getMood());
         return  json;
+    }
+
+    @RequestMapping("optClock")
+    public Object optClock(String opt, String uid, String name, String text, String id){
+        JSONObject json = new JSONObject();
+        json.put("text", "n");
+        switch (opt){
+            case "se":
+                if(uid != null){
+                    List<ClockText> textList = clockTextService.findClock(uid);
+                    List<String> texts = new ArrayList<>();
+                    List<Integer> ids = new ArrayList<>();
+                    for(ClockText clock: textList){
+                        texts.add(clock.getClockInfo());
+                        ids.add(clock.getId());
+                    }
+                    json.put("text", texts);
+                    json.put("ids", ids);
+                }
+                break;
+            case "up":
+                clockTextService.updateById(Integer.valueOf(id), text);
+                json.put("text", "ok");
+                break;
+            case "del":
+                clockTextService.delById(Integer.valueOf(id));
+                json.put("text", "ok");
+                break;
+            default:
+                ClockText clock = new ClockText();
+                clock.setUserId(uid);
+                clock.setUserName(name);
+                clock.setClockInfo(text);
+                clock.setCreateDate(new Date());
+                clockTextService.add(clock);
+                json.put("text", "ok");
+                break;
+        }
+        return json;
+    }
+
+    @RequestMapping("clockInfo")
+    public Object ClockInfo(String opt, String uid, String name, String text, String c_len){
+        JSONObject json = new JSONObject();
+        if(opt.equals("add")){
+            UserClockInfo clockInfo = new UserClockInfo();
+            clockInfo.setClockInfo(text);
+            clockInfo.setUserId(uid);
+            clockInfo.setUserName(name);
+            clockInfo.setLen(Integer.valueOf(c_len));
+            userClockService.add(clockInfo);
+            json.put("text", "ok");
+        }else{
+            List<UserClockInfo> list = userClockService.getUserClock(uid);
+            JSONArray jsonArray = new JSONArray();
+            for(UserClockInfo info : list){
+                JSONObject obj = new JSONObject();
+                obj.put("title", info.getClockInfo());
+                obj.put("date", info.getEndTime());
+                obj.put("len", info.getLen());
+                jsonArray.add(obj);
+            }
+            json.put("text", jsonArray);
+        }
+        return json;
     }
 }

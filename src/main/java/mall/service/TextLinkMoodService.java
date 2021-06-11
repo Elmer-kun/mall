@@ -18,4 +18,8 @@ public class TextLinkMoodService {
     public void add(TextLinkMood textLinkMood){
         mapper.add(textLinkMood);
     }
+
+    public TextLinkMood selectRand(){
+       return  mapper.selectRand();
+    }
 }

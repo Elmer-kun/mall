@@ -14,7 +14,7 @@ public class UserClockInfo {
     private String clockInfo;
     private Date startTime;
     private Date endTime;
-    private Integer len;
+    private Integer clockLen;
 
     public Integer getId() {
         return id;
@@ -65,11 +65,11 @@ public class UserClockInfo {
     }
 
     public Integer getLen() {
-        return len;
+        return clockLen;
     }
 
     public void setLen(Integer len) {
-        this.len = len;
+        this.clockLen = len;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class UserClockInfo {
                 ", clockInfo='" + clockInfo + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", len=" + len +
+                ", clockLen=" + clockLen +
                 '}';
     }
 }

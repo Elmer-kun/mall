@@ -17,4 +17,12 @@
     <select id="findClock" resultMap="clockText">
         select * from clockin_clocktext where userId = #{userId}
     </select>
+
+    <update id="updateById">
+        update clockin_clocktext set clockInfo = #{text} where id=#{id}
+    </update>
+
+    <delete id="delById">
+        delete from clockin_clocktext where id=#{id}
+    </delete>
 </mapper>

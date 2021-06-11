@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mall.mapper.UserClockMapper">
+
+    <resultMap id="userClock" type="mall.entity.UserClockInfo">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="userId" jdbcType="VARCHAR" property="userId" />
+        <result column="username" jdbcType="VARCHAR" property="userName" />
+        <result column="clockInfo" jdbcType="VARCHAR" property="clockInfo" />
+        <result column="clockLen" jdbcType="INTEGER" property="clockLen" />
+        <result column="startTime" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="endTime" jdbcType="TIMESTAMP" property="endTime" />
+    </resultMap>
+
+    <insert id="add">
+        insert into clockin_userclockinfo (userId, username, clockInfo, startTime, endTime, clockLen) values (#{userId},
+        #{userName}, #{clockInfo}, #{startTime}, #{endTime}, #{clockLen})
+    </insert>
+
+    <select id="getUserClock" resultMap="userClock">
+        select * from clockin_userclockinfo where userId = #{uid} order by endTime desc
+    </select>
+</mapper>

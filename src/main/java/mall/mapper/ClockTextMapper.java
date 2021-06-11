@@ -15,4 +15,8 @@ public interface ClockTextMapper {
     void add(ClockText clockText);
 
     List<ClockText> findClock(String userId);
+
+    void updateById(Integer id, String text);
+
+    void delById(Integer id);
 }

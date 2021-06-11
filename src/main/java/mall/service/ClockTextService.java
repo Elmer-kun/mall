@@ -23,4 +23,12 @@ public class ClockTextService {
     public List<ClockText> findClock(String userId){
         return mapper.findClock(userId);
     }
+
+    public void updateById(Integer id, String text){
+        mapper.updateById(id, text);
+    }
+
+    public void delById(Integer id){
+        mapper.delById(id);
+    }
 }
