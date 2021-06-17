@@ -48,19 +48,20 @@ public class WxController {
     }
 
     @RequestMapping("/getOpenid")
-    public Object Hello(){
+    public Object Hello(String code){
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=wxc89dfd93373e0cfd&secret=2084d2c4b8b8e28e00b8f64e2d5df881&grant_type=authorization_code&js_code=";
         JSONObject ret = new JSONObject();
         try {
-            String str = BaseUtil.doGet(url);
+            String str = BaseUtil.doGet(url+code);
+            System.out.println(str);
             JSONObject json = JSONObject.parseObject(str);
             //获取会话密钥（session_key）
             //String session_key = json.get("session_key").toString();
             //用户的唯一标识（openid）
-            if((int)json.get("errcode") == 0){
-               ret.put("userid", json.get("openid"));
-            }
-            System.out.println(str);
+            ret.put("userid", json.get("openid"));
+//            if((int)json.get("errcode") == 0){
+//               ret.put("userid", json.get("openid"));
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }
