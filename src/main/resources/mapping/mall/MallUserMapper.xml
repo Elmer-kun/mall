@@ -100,6 +100,9 @@
     nickname, mobile, avatar, wx_openid, status, add_time, update_time, deleted, share_user_id, 
     viplevel
   </sql>
+  <select id="selectByUserName" resultMap="BaseResultMap">
+    select * from mall_user where username = #{name}
+  </select>
   <select id="selectByExample" parameterType="mall.entity.mall.MallUserExample" resultMap="BaseResultMap">
     <!--
       WARNING - @mbggenerated

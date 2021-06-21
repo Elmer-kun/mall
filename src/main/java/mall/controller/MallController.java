@@ -1,9 +1,12 @@
 package mall.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import mall.base.PasswordUtil;
 import mall.base.ResponseUtil;
 import mall.entity.mall.MallGoods;
+import mall.entity.mall.MallUser;
 import mall.mapper.mall.MallGoodsMapper;
+import mall.mapper.mall.MallUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +26,25 @@ public class MallController {
     @Autowired
     MallGoodsMapper goodsMapper;
 
+    @Autowired
+    MallUserMapper userMapper;
+
     @RequestMapping("login")
     public Object doLogin(@RequestBody String data){
         JSONObject json = JSONObject.parseObject(data);
-        System.out.println(json.get("userName"));
-        System.out.println(json.get("passWord"));
-        return ResponseUtil.ok();
+        String name = json.getString("userName");
+        String pwd = json.getString("passWord");
+        if(null != name && null != pwd){
+            MallUser user = userMapper.selectByUserName(name);
+            if(user == null){
+                return ResponseUtil.fail(-1,"用户名不存在!");
+            }
+            String plaintext = PasswordUtil.decrypt(user.getPassword(), user.getUsername());
+            if(plaintext.equals(pwd)){
+                return ResponseUtil.ok();
+            }
+        }
+        return ResponseUtil.fail(-1,  "密码错误!");
     }
 
     @RequestMapping("getGoodsList")
