@@ -118,6 +118,9 @@
     add_time, update_time, deleted, settlement_money, settlement_status, freight_type, 
     share_user_id, fetch_code, create_user_id, gift_send_time, gift_receive_time
   </sql>
+  <select id="loadAll" resultMap="BaseResultMap">
+    select * from mall_order order by add_time
+  </select>
   <select id="selectByExample" parameterType="mall.entity.mall.MallOrderExample" resultMap="BaseResultMap">
     <!--
       WARNING - @mbggenerated
