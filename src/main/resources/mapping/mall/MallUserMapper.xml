@@ -103,6 +103,9 @@
   <select id="selectByUserName" resultMap="BaseResultMap">
     select * from mall_user where username = #{name}
   </select>
+  <select id="selectByOpenId" resultMap="BaseResultMap">
+    select * from mall_user where wx_openid = #{openId}
+  </select>
   <select id="selectByExample" parameterType="mall.entity.mall.MallUserExample" resultMap="BaseResultMap">
     <!--
       WARNING - @mbggenerated
