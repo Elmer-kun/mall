@@ -5,10 +5,13 @@ import mall.base.*;
 import mall.entity.UserInfo;
 import mall.entity.UserToken;
 import mall.entity.WxLoginInfo;
+import mall.entity.mall.MallGoods;
 import mall.entity.mall.MallUser;
+import mall.mapper.mall.MallGoodsMapper;
 import mall.mapper.mall.MallUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author elmer
@@ -31,9 +32,12 @@ public class MallWxController {
     @Autowired
     MallUserMapper userMapper;
 
+    @Autowired
+    MallGoodsMapper goodsMapper;
+
 
     @RequestMapping("loginWx")
-    public Object loginByWeixin(@RequestBody WxLoginInfo wxLoginInfo, HttpServletRequest request) {
+    public Object loginByWx(@RequestBody WxLoginInfo wxLoginInfo, HttpServletRequest request) {
         String code = wxLoginInfo.getCode();
         UserInfo userInfo = wxLoginInfo.getUserInfo();
         if (code == null || userInfo == null) {
@@ -116,4 +120,81 @@ public class MallWxController {
         result.put("userInfo", userInfo);
         return ResponseUtil.ok(result);
     }
+
+    @GetMapping("mallIndex")
+    public Object mallIndex(){
+        JSONObject data = new JSONObject();
+        try {
+            List<MallGoods> mallGoods = goodsMapper.getAll();
+            data.put("banner", new ArrayList<>());
+            data.put("articles", BaseUtil.getMallArticle());
+            data.put("channel", new ArrayList<>());
+            data.put("couponList", new ArrayList<>());
+            data.put("newGoodsList", mallGoods);
+            data.put("hotGoodsList", mallGoods);
+            data.put("brandList", new ArrayList<>());
+            data.put("topicList", mallGoods);
+            data.put("grouponList", new ArrayList<>());
+            data.put("floorGoodsList", mallGoods);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseUtil.fail(-1,e.getMessage());
+        }
+        return ResponseUtil.ok(data);
+    }
+    /**
+     * 在售的商品总数
+     */
+    @GetMapping("goodsCount")
+    public Object goodsCount() {
+        Integer goodsCount = goodsMapper.getAll().size();
+        JSONObject data = new JSONObject();
+        data.put("goodsCount", goodsCount);
+        return ResponseUtil.ok(data);
+    }
+
+    @RequestMapping("getUserCoupon")
+    public Object getUserCoupon() {
+        JSONObject data = new JSONObject();
+        data.put("couponList", new ArrayList<>());
+        return ResponseUtil.ok(data);
+    }
+
+    @RequestMapping("wx/getGoodsList")
+    public Object getGoodsList() {
+        JSONObject data = new JSONObject();
+        List<MallGoods> list = goodsMapper.getAll();
+        data.put("goodsList", list);
+        int totalPages = (int) Math.ceil((double) list.size() / 10);
+        data.put("count", list.size());
+        data.put("filterCategoryList", new ArrayList<>(0));
+        data.put("totalPages", totalPages);
+        return ResponseUtil.ok(data);
+    }
+
+    @GetMapping("wx/getGoodsDetail")
+    public Object getGoodsDetail(Integer id) {
+        JSONObject data = new JSONObject();
+        MallGoods goods = goodsMapper.selectByPrimaryKey(id);
+        try {
+            data.put("info", goods);
+            data.put("userHasCollect", 0);
+            data.put("issue", new ArrayList<>());
+            data.put("comment", new ArrayList<>());
+            data.put("specificationList", new ArrayList<>());
+            data.put("productList", new ArrayList<>());
+            data.put("attribute", new ArrayList<>());
+            data.put("brand", new ArrayList<>());
+            data.put("groupon", new ArrayList<>());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseUtil.ok(data);
+    }
+
+    @RequestMapping("cartGoodsCount")
+    public Object cartGoodsCount(Integer id) {
+        return ResponseUtil.ok(2);
+    }
+
 }

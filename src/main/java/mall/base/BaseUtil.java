@@ -1,9 +1,12 @@
 package mall.base;
 
+import mall.entity.mall.MallArticle;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +54,17 @@ public class BaseUtil {
             }
         }
         return result;
+    }
+
+
+    public static List<MallArticle> getMallArticle(){
+        List<MallArticle> list = new ArrayList<>();
+        MallArticle mallArticle = new MallArticle();
+        mallArticle.setId(1);
+        mallArticle.setType("1");
+        mallArticle.setTitle("一大波福利即将来袭");
+        mallArticle.setTitle("商城高速发展中，新品即将上架，敬请期待");
+        list.add(mallArticle);
+        return list;
     }
 }
