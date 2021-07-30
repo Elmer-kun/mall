@@ -7,6 +7,7 @@ import mall.entity.UserToken;
 import mall.entity.WxLoginInfo;
 import mall.entity.mall.MallGoods;
 import mall.entity.mall.MallUser;
+import mall.mapper.mall.MallCartMapper;
 import mall.mapper.mall.MallGoodsMapper;
 import mall.mapper.mall.MallUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +36,9 @@ public class MallWxController {
 
     @Autowired
     MallGoodsMapper goodsMapper;
+
+    @Autowired
+    MallCartMapper cartMapper;
 
 
     @RequestMapping("loginWx")
@@ -147,7 +152,7 @@ public class MallWxController {
      */
     @GetMapping("goodsCount")
     public Object goodsCount() {
-        Integer goodsCount = goodsMapper.getAll().size();
+        int goodsCount = goodsMapper.getAll().size();
         JSONObject data = new JSONObject();
         data.put("goodsCount", goodsCount);
         return ResponseUtil.ok(data);
@@ -158,43 +163,6 @@ public class MallWxController {
         JSONObject data = new JSONObject();
         data.put("couponList", new ArrayList<>());
         return ResponseUtil.ok(data);
-    }
-
-    @RequestMapping("wx/getGoodsList")
-    public Object getGoodsList() {
-        JSONObject data = new JSONObject();
-        List<MallGoods> list = goodsMapper.getAll();
-        data.put("goodsList", list);
-        int totalPages = (int) Math.ceil((double) list.size() / 10);
-        data.put("count", list.size());
-        data.put("filterCategoryList", new ArrayList<>(0));
-        data.put("totalPages", totalPages);
-        return ResponseUtil.ok(data);
-    }
-
-    @GetMapping("wx/getGoodsDetail")
-    public Object getGoodsDetail(Integer id) {
-        JSONObject data = new JSONObject();
-        MallGoods goods = goodsMapper.selectByPrimaryKey(id);
-        try {
-            data.put("info", goods);
-            data.put("userHasCollect", 0);
-            data.put("issue", new ArrayList<>());
-            data.put("comment", new ArrayList<>());
-            data.put("specificationList", new ArrayList<>());
-            data.put("productList", new ArrayList<>());
-            data.put("attribute", new ArrayList<>());
-            data.put("brand", new ArrayList<>());
-            data.put("groupon", new ArrayList<>());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseUtil.ok(data);
-    }
-
-    @RequestMapping("cartGoodsCount")
-    public Object cartGoodsCount(Integer id) {
-        return ResponseUtil.ok(2);
     }
 
 }
