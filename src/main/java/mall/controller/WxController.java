@@ -78,23 +78,32 @@ public class WxController {
     @RequestMapping("getmoodmodel")
     public Object getMoodModel(){
         JSONObject json = new JSONObject();
-        json.put("moodlist", modelService.findAll());
+        List<MoodModel> list = modelService.findAll();
+        JSONArray ary = new JSONArray();
+        for(MoodModel ll: list){
+            ary.add(ll.getName());
+        }
+        json.put("moodlist", ary);
         return  json;
     }
 
     @RequestMapping("getmoodlist")
-    public Object getMoodList(String name){
+    public Object getMoodList(String moodmodel){
         JSONObject json = new JSONObject();
-        json.put("moodlist", moodTextService.findText(name));
+        JSONArray ary = new JSONArray();
+        for(MoodText ll: moodTextService.findText(moodmodel)){
+            ary.add(ll.getText());
+        }
+        json.put("moodlist", ary);
         return  json;
     }
 
     @RequestMapping("collectmood")
-    public Object collectMood(String text, String mood){
+    public Object collectMood(String textinput, String mood){
         JSONObject json = new JSONObject();
         json.put("text", "sucess");
         TextLinkMood textMood = new TextLinkMood();
-        textMood.setText(text);
+        textMood.setText(textinput);
         textMood.setMood(mood);
         textMood.setCreateDate(new Date());
         textLinkMoodService.add(textMood);
